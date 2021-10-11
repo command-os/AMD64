@@ -1,0 +1,15 @@
+/debug
+/target
+Cargo.lock
+**/*.rs.bk
+.pdb
+.vscode/*
+*.code-workspace
+.history/
+.history
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+.ionide
