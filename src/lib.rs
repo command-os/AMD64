@@ -1,5 +1,5 @@
 #![no_std]
-#![warn(warnings, clippy::cargo)]
+#![deny(warnings, clippy::cargo)]
 #![feature(asm)]
 #![feature(const_fn_trait_bound)]
 
