@@ -1,0 +1,102 @@
+mod pml4;
+
+use crate::alloc::boxed::Box;
+use bit::BitIndex;
+use modular_bitfield::prelude::*;
+pub use pml4::*;
+
+pub const PHYS_VIRT_OFFSET: u64 = 0xFFFF800000000000;
+pub const KERNEL_VIRT_OFFSET: u64 = 0xFFFFFFFF80000000;
+
+#[derive(Debug, Clone, Copy)]
+#[repr(C, packed)]
+pub struct PageTable {
+    pub entries: [PageTableEntry; 512],
+}
+
+impl PageTable {
+    pub fn new() -> Self {
+        Self {
+            entries: [PageTableEntry::default(); 512],
+        }
+    }
+
+    #[inline]
+    pub fn get_or_alloc_entry<'a>(
+        &'a mut self,
+        offset: usize,
+        flags: PageTableEntryFlags,
+    ) -> Option<&'static mut Self> {
+        let entry = &mut self.entries[offset];
+
+        if entry.present() == false {
+            let mut table = Box::new(PageTable::new());
+            entry.set_address((table.as_mut() as *mut _ as u64) >> 12);
+            Box::leak(table);
+
+            entry.set_present(flags.present);
+            entry.set_writable(flags.writable);
+            entry.set_user(flags.user);
+            entry.set_wt(flags.wt);
+            entry.set_no_cache(flags.no_cache);
+            entry.set_huge(flags.huge);
+            entry.set_global(flags.global);
+            entry.set_no_execute(flags.no_execute);
+        }
+
+        unsafe { ((entry.address() << 12) as *mut PageTable).as_mut() }
+    }
+}
+
+#[derive(Debug, Default, Clone, Copy)]
+pub struct PageTableEntryFlags {
+    pub present: bool,
+    pub writable: bool,
+    pub user: bool,
+    pub wt: bool,
+    pub no_cache: bool,
+    pub huge: bool,
+    pub global: bool,
+    pub no_execute: bool,
+}
+
+#[bitfield(bits = 64)]
+#[repr(C, u64)]
+#[derive(Debug, Default, Clone, Copy)]
+pub struct PageTableEntry {
+    pub present: bool,
+    pub writable: bool,
+    pub user: bool,
+    pub wt: bool,
+    pub no_cache: bool,
+    #[skip(setters)]
+    pub accessed: bool,
+    #[skip(setters)]
+    pub dirty: bool,
+    pub huge: bool,
+    pub global: bool,
+    pub available_to_os: B3,
+    pub address: B40,
+    pub available_to_os2: B11,
+    pub no_execute: bool,
+}
+
+#[derive(Debug)]
+struct PageTableOffsets {
+    pub pml4: usize,
+    pub pml3: usize,
+    pub pml2: usize,
+    pub pml1: usize,
+}
+
+impl PageTableOffsets {
+    #[inline]
+    pub fn new(virtual_address: u64) -> Self {
+        Self {
+            pml4: virtual_address.bit_range(39..48).try_into().unwrap(),
+            pml3: virtual_address.bit_range(30..39).try_into().unwrap(),
+            pml2: virtual_address.bit_range(21..30).try_into().unwrap(),
+            pml1: virtual_address.bit_range(12..21).try_into().unwrap(),
+        }
+    }
+}
