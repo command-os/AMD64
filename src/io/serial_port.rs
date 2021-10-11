@@ -1,40 +1,44 @@
 pub trait PortInOut {
+    /// # Safety
+    /// The caller must ensure that this operation has no unsafe side effects.
     unsafe fn read(port: u16) -> Self;
+    /// # Safety
+    /// The caller must ensure that this operation has no unsafe side effects.
     unsafe fn write(port: u16, value: Self);
 }
 
 impl PortInOut for u8 {
-    unsafe fn read(port: u16) -> u8 {
-        let ret: u8;
+    unsafe fn read(port: u16) -> Self {
+        let ret: Self;
         asm!("in al, dx", out("al") ret, in("dx") port, options(nomem, nostack, preserves_flags));
         ret
     }
 
-    unsafe fn write(port: u16, value: u8) {
+    unsafe fn write(port: u16, value: Self) {
         asm!("out dx, al", in("dx") port, in("al") value, options(nomem, nostack, preserves_flags));
     }
 }
 
 impl PortInOut for u16 {
-    unsafe fn read(port: u16) -> u16 {
-        let ret: u16;
+    unsafe fn read(port: u16) -> Self {
+        let ret: Self;
         asm!("in ax, dx", out("ax") ret, in("dx") port, options(nomem, nostack, preserves_flags));
         ret
     }
 
-    unsafe fn write(port: u16, value: u16) {
+    unsafe fn write(port: u16, value: Self) {
         asm!("out dx, ax", in("dx") port, in("ax") value, options(nomem, nostack, preserves_flags));
     }
 }
 
 impl PortInOut for u32 {
-    unsafe fn read(port: u16) -> u32 {
-        let ret: u32;
+    unsafe fn read(port: u16) -> Self {
+        let ret: Self;
         asm!("in eax, dx", out("eax") ret, in("dx") port, options(nomem, nostack, preserves_flags));
         ret
     }
 
-    unsafe fn write(port: u16, value: u32) {
+    unsafe fn write(port: u16, value: Self) {
         asm!("out dx, eax", in("dx") port, in("eax") value, options(nomem, nostack, preserves_flags));
     }
 }
@@ -45,6 +49,7 @@ pub struct SerialPort<T: PortInOut> {
 }
 
 impl<T: PortInOut> SerialPort<T> {
+    #[must_use]
     pub const fn new(port: u16) -> Self {
         Self {
             port,
@@ -52,10 +57,15 @@ impl<T: PortInOut> SerialPort<T> {
         }
     }
 
+    /// # Safety
+    /// The caller must ensure that this operation has no unsafe side effects.
+    #[must_use]
     pub unsafe fn read(&self) -> T {
         T::read(self.port)
     }
 
+    /// # Safety
+    /// The caller must ensure that this operation has no unsafe side effects.
     pub unsafe fn write(&self, value: T) {
         T::write(self.port, value);
     }

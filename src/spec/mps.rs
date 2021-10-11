@@ -1,3 +1,5 @@
+#![allow(clippy::must_use_candidate, clippy::map_unwrap_or)]
+
 use modular_bitfield::prelude::*;
 
 #[derive(BitfieldSpecifier)]
