@@ -1,8 +1,17 @@
-mod efer;
-mod vm_cr;
+#![allow(
+    clippy::must_use_candidate,
+    clippy::map_unwrap_or,
+    clippy::unnecessary_cast,
+    clippy::cast_possible_truncation
+)]
 
 pub use efer::*;
+pub use pat::*;
 pub use vm_cr::*;
+
+mod efer;
+mod pat;
+mod vm_cr;
 
 pub trait Msr {
     const MSR_NUM: u32;

@@ -1,10 +1,13 @@
 [package]
 name = "amd64"
+description = "Firework AMD64 implementation crate"
+repository = "https://bitbucket.org/firework-os/amd64"
+keywords = ["amd64"]
+categories = ["no-std"]
 version = "0.1.0"
 authors = ["VisualDevelopment"]
-publish = false
 edition = "2021"
-license = "proprietary"
+license-file = "LICENSE"
 
 [profile.dev]
 lto = "thin"

@@ -1,17 +1,15 @@
-#![allow(clippy::must_use_candidate, clippy::map_unwrap_or)]
-
 use modular_bitfield::prelude::*;
 
 #[bitfield(bits = 64)]
-#[repr(C, u64)]
-#[derive(Debug, Default, Clone, Copy)]
+#[repr(u64)]
+#[derive(BitfieldSpecifier, Debug, Default, Clone, Copy)]
 pub struct Efer {
     pub syscall_ext: bool,
     #[skip]
-    reserved: B7,
+    __: B7,
     pub long_mode: bool,
     #[skip]
-    reserved1: B1,
+    __: B1,
     pub long_mode_active: bool,
     pub no_execute: bool,
     pub secure_virtual_machine: bool,
@@ -19,11 +17,11 @@ pub struct Efer {
     pub fast_fxsave_fxrstor: bool,
     pub translation_cache_ext: bool,
     #[skip]
-    reserved2: B1,
+    __: B1,
     pub mcommit: bool,
-    pub interruptible_wbinvd_wbnoinvd: bool,
+    pub interruptible_wbinvd: bool,
     #[skip]
-    reserved3: B45,
+    __: B45,
 }
 
 impl super::Msr for Efer {

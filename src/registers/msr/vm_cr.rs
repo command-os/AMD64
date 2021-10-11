@@ -1,19 +1,16 @@
-#![allow(clippy::must_use_candidate, clippy::map_unwrap_or)]
-
 use modular_bitfield::prelude::*;
 
 #[bitfield(bits = 64)]
-#[repr(C, u64)]
-#[derive(Debug, Default, Clone, Copy)]
+#[repr(u64)]
+#[derive(BitfieldSpecifier, Debug, Default, Clone, Copy)]
 pub struct VmCr {
     pub disable_debug_port: bool,
     pub reserve_init: bool,
     pub disable_a20: bool,
-    #[skip(setters)]
     pub locked: bool,
     pub disabled: bool,
     #[skip]
-    reserved: B59,
+    __: B59,
 }
 
 impl super::Msr for VmCr {
