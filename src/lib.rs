@@ -5,7 +5,6 @@
 
 extern crate alloc;
 
-pub mod instructions;
 pub mod io;
 pub mod paging;
 pub mod registers;
