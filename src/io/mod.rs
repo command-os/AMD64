@@ -1,3 +1,2 @@
-pub use serial_port::{PortInOut, SerialPort};
-
-mod serial_port;
+pub mod port;
+pub mod serial;

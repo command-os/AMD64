@@ -43,12 +43,12 @@ impl PortInOut for u32 {
     }
 }
 
-pub struct SerialPort<T: PortInOut> {
+pub struct Port<T: PortInOut> {
     port: u16,
     _phantom: core::marker::PhantomData<T>,
 }
 
-impl<T: PortInOut> SerialPort<T> {
+impl<T: PortInOut> Port<T> {
     #[must_use]
     pub const fn new(port: u16) -> Self {
         Self {
