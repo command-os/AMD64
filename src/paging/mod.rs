@@ -7,7 +7,6 @@
 
 use bit::BitIndex;
 use modular_bitfield::prelude::*;
-
 pub use pml4::*;
 
 use crate::alloc::boxed::Box;
