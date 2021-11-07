@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) VisualDevelopment 2021-2021.
+ * This project is licensed by the Creative Commons Attribution-NoCommercial-NoDerivatives licence.
+ */
+
 pub trait PML4 {
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
