@@ -11,7 +11,7 @@ env:
 
 jobs:
   clippy:
-    name: Run clippy
+    name: Lints
     runs-on: ubuntu-latest
 
     steps:
@@ -21,12 +21,17 @@ jobs:
           toolchain: nightly
           override: true
           components: rust-src, clippy
+      - uses: actions-rs/cargo@v1
+        with:
+          toolchain: nightly
+          command: fmt
+          args: --all -- --check
       - uses: actions-rs/cargo@v1
         with:
           toolchain: nightly
           command: clippy
-  build:
-    name: Build
+  test:
+    name: Test suite
     runs-on: ubuntu-latest
 
     steps:
@@ -35,9 +40,8 @@ jobs:
         with:
           toolchain: nightly
           override: true
-          components: rust-src, clippy
+          components: rust-src
       - uses: actions-rs/cargo@v1
         with:
           toolchain: nightly
-          command: build
-          args: --release
+          command: test
