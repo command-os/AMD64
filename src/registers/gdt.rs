@@ -7,7 +7,7 @@
 
 use modular_bitfield::prelude::*;
 
-#[derive(Debug, Default, BitfieldSpecifier, Clone, Copy)]
+#[derive(Debug, Default, BitfieldSpecifier, Clone, Copy, PartialEq, Eq)]
 #[bits = 5]
 #[repr(u8)]
 pub enum DescriptorType {
@@ -19,7 +19,7 @@ pub enum DescriptorType {
 }
 
 #[bitfield(bits = 16)]
-#[derive(Debug, Default, BitfieldSpecifier, Clone, Copy)]
+#[derive(Debug, Default, BitfieldSpecifier, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct SegmentAttributes {
     pub ty: DescriptorType,
@@ -32,7 +32,7 @@ pub struct SegmentAttributes {
     pub granularity: bool,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C, packed)]
 pub struct SegmentDescriptor {
     pub limit_low: u16,
