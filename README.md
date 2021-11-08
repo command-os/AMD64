@@ -1,4 +1,4 @@
-# AMD64
+# AMD64 [![Run clippy & test](https://github.com/Firework-OS/AMD64/actions/workflows/run_and_test.yml/badge.svg)](https://github.com/Firework-OS/AMD64/actions/workflows/run_and_test.yml)
 
 The Firework AMD64 implementation crate.
 
