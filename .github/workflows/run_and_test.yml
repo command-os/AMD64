@@ -20,7 +20,7 @@ jobs:
         with:
           toolchain: nightly
           override: true
-          components: rust-src, clippy
+          components: rust-src, rustfmt, clippy
       - uses: actions-rs/cargo@v1
         with:
           toolchain: nightly
