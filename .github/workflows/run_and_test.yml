@@ -1,0 +1,37 @@
+name: Run clippy & test
+
+on:
+  push:
+    branches: [master, staging, trying]
+  pull_request:
+    branches: [master]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  clippy:
+    name: Run clippy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          components: rust-src, clippy
+      - uses: actions-rs/cargo@v1
+        with:
+          toolchain: nightly
+          command: clippy
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions-rs/cargo@v1
+        with:
+          toolchain: nightly
+          command: build
+          args: --release
