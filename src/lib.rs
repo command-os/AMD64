@@ -15,4 +15,5 @@ pub mod io;
 pub mod paging;
 pub mod registers;
 pub mod spec;
+pub mod sys;
 pub mod utilities;

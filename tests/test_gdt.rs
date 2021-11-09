@@ -1,12 +1,12 @@
 #[test]
 fn code_segment_desc() {
     assert_eq!(
-        amd64::registers::gdt::SegmentDescriptor::new_from_ty(
-            amd64::registers::gdt::DescriptorType::CodeSegment
+        amd64::sys::gdt::SegmentDescriptor::new_from_ty(
+            amd64::sys::gdt::DescriptorType::CodeSegment
         )
         .attrs,
-        amd64::registers::gdt::SegmentAttributes::new()
-            .with_ty(amd64::registers::gdt::DescriptorType::CodeSegment)
+        amd64::sys::gdt::SegmentAttributes::new()
+            .with_ty(amd64::sys::gdt::DescriptorType::CodeSegment)
             .with_present(true)
             .with_long(true)
     );
@@ -15,12 +15,12 @@ fn code_segment_desc() {
 #[test]
 fn data_segment_desc() {
     assert_eq!(
-        amd64::registers::gdt::SegmentDescriptor::new_from_ty(
-            amd64::registers::gdt::DescriptorType::DataSegment
+        amd64::sys::gdt::SegmentDescriptor::new_from_ty(
+            amd64::sys::gdt::DescriptorType::DataSegment
         )
         .attrs,
-        amd64::registers::gdt::SegmentAttributes::new()
-            .with_ty(amd64::registers::gdt::DescriptorType::DataSegment)
+        amd64::sys::gdt::SegmentAttributes::new()
+            .with_ty(amd64::sys::gdt::DescriptorType::DataSegment)
             .with_present(true)
     );
 }
@@ -28,19 +28,19 @@ fn data_segment_desc() {
 #[test]
 fn task_segment_desc() {
     assert_eq!(
-        amd64::registers::gdt::SegmentDescriptor::new_from_ty(
-            amd64::registers::gdt::DescriptorType::TaskSegment
+        amd64::sys::gdt::SegmentDescriptor::new_from_ty(
+            amd64::sys::gdt::DescriptorType::TaskSegment
         )
         .attrs,
-        amd64::registers::gdt::SegmentAttributes::new()
-            .with_ty(amd64::registers::gdt::DescriptorType::TaskSegment)
+        amd64::sys::gdt::SegmentAttributes::new()
+            .with_ty(amd64::sys::gdt::DescriptorType::TaskSegment)
     );
 }
 
 #[test]
 fn null_segment_desc() {
     assert_eq!(
-        amd64::registers::gdt::SegmentDescriptor::default().attrs,
-        amd64::registers::gdt::SegmentAttributes::new().with_present(true)
+        amd64::sys::gdt::SegmentDescriptor::default().attrs,
+        amd64::sys::gdt::SegmentAttributes::new().with_present(true)
     );
 }
