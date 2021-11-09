@@ -79,24 +79,24 @@ unsafe impl Sync for Gdtr {}
 
 impl Gdtr {
     /// # Safety
-    /// The caller must ensure the safety of this operation.
+    /// The caller must ensure that this operation has no unsafe side effects.
     pub unsafe fn load(&self) {
         asm!(
-            "lgdt [{gdt}]",
-            "push {cs}",
-            "lea {tmp}, [1f + rip]",
-            "push {tmp}",
+            "lgdt [{}]",
+            "push {}",
+            "lea {2}, [1f + rip]",
+            "push {2}",
             "retfq",
             "1:",
-            "mov ds, {ds}",
-            "mov es, {ds}",
-            "mov fs, {ds}",
-            "mov gs, {ds}",
-            "mov ss, {ds}",
-            gdt = in(reg) self,
-            tmp = lateout(reg) _,
-            cs = in(reg) 1u64 << 3u64,
-            ds = in(reg) 2u64 << 3u64,
+            "mov ds, {3}",
+            "mov es, {3}",
+            "mov fs, {3}",
+            "mov gs, {3}",
+            "mov ss, {3}",
+            in(reg) self,
+            in(reg) 1u64 << 3u64,
+            lateout(reg) _,
+            in(reg) 2u64 << 3u64,
         );
     }
 }
