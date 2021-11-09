@@ -21,14 +21,12 @@ jobs:
           toolchain: nightly
           override: true
           components: rust-src, rustfmt, clippy
-      - name: Cargo fmt
-        uses: actions-rs/cargo@v1
+      - uses: actions-rs/cargo@v1
         with:
           toolchain: nightly
           command: fmt
           args: --all -- --check
-      - name: Cargo clippy
-        uses: actions-rs/cargo@v1
+      - uses: actions-rs/cargo@v1
         with:
           toolchain: nightly
           command: clippy
@@ -43,8 +41,7 @@ jobs:
           toolchain: nightly
           override: true
           components: rust-src
-      - name: Cargo test
-        uses: actions-rs/cargo@v1
+      - uses: actions-rs/cargo@v1
         with:
           toolchain: nightly
           command: test
