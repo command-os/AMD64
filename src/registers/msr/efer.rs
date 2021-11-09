@@ -5,7 +5,6 @@
 
 use modular_bitfield::prelude::*;
 
-#[amd64_macros::msr(0xC000_0080)]
 #[bitfield(bits = 64)]
 #[repr(u64)]
 #[derive(BitfieldSpecifier, Debug, Default, Clone, Copy)]
@@ -28,4 +27,16 @@ pub struct Efer {
     pub interruptible_wbinvd: bool,
     #[skip]
     __: B45,
+}
+
+impl super::Msr for Efer {
+    const MSR_NUM: u32 = 0xC000_0080;
+
+    fn from_bytes(bytes: [u8; 8]) -> Self {
+        Self::from_bytes(bytes)
+    }
+
+    fn into_bytes(self) -> [u8; 8] {
+        Efer::into_bytes(self)
+    }
 }

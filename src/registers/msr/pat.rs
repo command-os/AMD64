@@ -5,7 +5,6 @@
 
 use modular_bitfield::prelude::*;
 
-#[amd64_macros::msr(0x227)]
 #[bitfield(bits = 64)]
 #[repr(u64)]
 #[derive(BitfieldSpecifier, Debug, Default, Clone, Copy)]
@@ -34,4 +33,16 @@ pub struct Pat {
     pub pa7: B3,
     #[skip]
     __: B5,
+}
+
+impl super::Msr for Pat {
+    const MSR_NUM: u32 = 0x227;
+
+    fn from_bytes(bytes: [u8; 8]) -> Self {
+        Self::from_bytes(bytes)
+    }
+
+    fn into_bytes(self) -> [u8; 8] {
+        Pat::into_bytes(self)
+    }
 }
