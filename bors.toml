@@ -1,6 +1,6 @@
-status = ["Cargo %"]
+status = ["Cargo fmt", "Cargo clippy", "Cargo test"]
 block_labels = ["Invalid", "Duplicate", "Help wanted", "Won't fix"]
-pr_stats = ["Cargo %"]
+pr_stats = ["Cargo fmt", "Cargo clippy", "Cargo test"]
 delete_merged_branches = true
 use_squash_merge = true
 update_base_for_deletes = true
