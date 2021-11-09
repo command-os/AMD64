@@ -1,6 +1,6 @@
-status = ["Cargo fmt", "Cargo clippy", "Cargo test"]
+status = ["Run clippy & test / Lints", "Run clippy & test / Test suite"]
 block_labels = ["Invalid", "Duplicate", "Help wanted", "Won't fix"]
-pr_stats = ["Cargo fmt", "Cargo clippy", "Cargo test"]
+pr_stats = ["Run clippy & test / Lints", "Run clippy & test / Test suite"]
 delete_merged_branches = true
 use_squash_merge = true
 update_base_for_deletes = true
