@@ -1,3 +1,5 @@
+#[derive(Debug)]
+#[repr(C)]
 pub struct RegisterState {
     pub r15: u64,
     pub r14: u64,
@@ -21,4 +23,20 @@ pub struct RegisterState {
     pub rflags: u64,
     pub rsp: u64,
     pub ss: u64,
+}
+
+#[repr(u16)]
+pub enum PrivilegeLevel {
+    Hypervisor = 0,
+    User = 3,
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(transparent)]
+pub struct SegmentSelector(pub u16);
+
+impl SegmentSelector {
+    pub const fn new(index: u16, dpl: PrivilegeLevel) -> Self {
+        Self((index << 3) | (dpl as u16))
+    }
 }

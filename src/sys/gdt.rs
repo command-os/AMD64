@@ -80,7 +80,7 @@ unsafe impl Sync for Gdtr {}
 impl Gdtr {
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
-    pub unsafe fn load(&self) {
+    pub unsafe fn load(&self, cs: super::cpu::SegmentSelector, ds: super::cpu::SegmentSelector) {
         asm!(
             "lgdt [{}]",
             "push {}",
@@ -94,9 +94,9 @@ impl Gdtr {
             "mov gs, {3}",
             "mov ss, {3}",
             in(reg) self,
-            in(reg) 1u64 << 3u64,
+            in(reg) cs.0 as u64,
             lateout(reg) _,
-            in(reg) 2u64 << 3u64,
+            in(reg) ds.0 as u64,
         );
     }
 }

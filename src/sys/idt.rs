@@ -27,32 +27,32 @@ pub struct EntryFlags {
 #[derive(Debug, Clone, Copy)]
 #[repr(C, packed)]
 pub struct Entry {
-    pub off_low: u16,
-    pub selector: u16,
+    pub offset_low: u16,
+    pub selector: super::cpu::SegmentSelector,
     pub flags: EntryFlags,
-    pub off_middle: u16,
-    pub off_high: u32,
+    pub offset_middle: u16,
+    pub offset_high: u32,
     _reserved: u32,
 }
 
 impl Entry {
     pub const fn new(
-        func: u64,
-        selector: u16,
+        base: u64,
+        selector: super::cpu::SegmentSelector,
         ist: u8,
         ty: EntryType,
         dpl: u8,
         present: bool,
     ) -> Self {
         Self {
-            off_low: (func & 0xFFFF) as u16,
+            offset_low: base as u16,
             selector,
             flags: EntryFlags::from_bytes([
                 ist & 0x7,
                 ty as u8 | ((dpl & 0x3) << 5) | ((present as u8) << 7),
             ]),
-            off_middle: ((func >> 16) & 0xFFFF) as u16,
-            off_high: ((func >> 32) & 0xFFFFFFFF) as u32,
+            offset_middle: (base >> 16) as u16,
+            offset_high: (base >> 32) as u32,
             _reserved: 0,
         }
     }
@@ -72,3 +72,5 @@ impl Idtr {
         asm!("lidt [{}]", in(reg) self);
     }
 }
+
+unsafe impl Sync for Idtr {}
