@@ -77,11 +77,7 @@ impl PageTable {
     }
 
     #[inline]
-    pub fn get_or_alloc_entry(
-        &mut self,
-        offset: usize,
-        flags: PageTableEntry,
-    ) -> &'static mut Self {
+    pub fn get_or_alloc_entry(&mut self, offset: usize, flags: PageTableEntry) -> &mut Self {
         let entry = &mut self.entries[offset];
 
         if !entry.present() {
@@ -99,5 +95,16 @@ impl PageTable {
         }
 
         unsafe { &mut *((entry.address() << 12) as *mut Self) }
+    }
+
+    #[inline]
+    pub fn get_or_null_entry(&self, offset: usize) -> Option<&mut Self> {
+        let entry = &self.entries[offset];
+
+        if !entry.present() {
+            None
+        } else {
+            Some(unsafe { &mut *((entry.address() << 12) as *mut Self) })
+        }
     }
 }
