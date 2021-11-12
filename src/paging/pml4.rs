@@ -100,7 +100,7 @@ impl Pml4 for super::PageTable {
 
     #[inline]
     unsafe fn map_higher_half(&mut self) {
-        self.map_huge_pages(super::PHYS_VIRT_OFFSET + 0x20_0000, 0, 2047);
+        self.map_huge_pages(super::PHYS_VIRT_OFFSET + 0x20_0000, 0x20_0000, 2047);
         self.map_huge_pages(super::KERNEL_VIRT_OFFSET, 0, 1024);
     }
 }
