@@ -3,7 +3,7 @@
  * This project is licensed by the Creative Commons Attribution-NoCommercial-NoDerivatives licence.
  */
 
-pub trait PML4 {
+pub trait Pml4 {
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
     unsafe fn set(&mut self);
@@ -24,7 +24,7 @@ pub trait PML4 {
     unsafe fn map_higher_half(&mut self);
 }
 
-impl PML4 for super::PageTable {
+impl Pml4 for super::PageTable {
     #[inline]
     unsafe fn set(&mut self) {
         asm!("mov cr3, {}", in(reg) self as *mut _, options(nostack, preserves_flags));
@@ -64,8 +64,8 @@ impl PML4 for super::PageTable {
             .with_user(true);
 
         for i in 0..count {
-            let physical_address = phys + 0x20_0000 * i;
-            let virtual_address = virt + 0x20_0000 * i;
+            let physical_address = phys + 0x1000 * i;
+            let virtual_address = virt + 0x1000 * i;
             let offs = super::PageTableOffsets::new(virtual_address);
             let pml3 = self.get_or_alloc_entry(offs.pml4, flags);
             let pml2 = pml3.get_or_alloc_entry(offs.pml3, flags);
