@@ -13,7 +13,8 @@ license-file = "LICENSE"
 lto = "thin"
 
 [profile.release]
-lto = "thin"
+lto = true
+opt-level = 3
 
 [dependencies]
 modular-bitfield = "0.11.2"
