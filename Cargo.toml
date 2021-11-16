@@ -18,4 +18,3 @@ opt-level = 3
 
 [dependencies]
 modular-bitfield = "0.11.2"
-bit = "0.1.1"

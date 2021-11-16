@@ -5,33 +5,29 @@
 
 #![allow(clippy::must_use_candidate, clippy::map_unwrap_or)]
 
-use bit::BitIndex;
+pub mod pml4;
+
 use modular_bitfield::prelude::*;
-pub use pml4::*;
 
-use crate::alloc::boxed::Box;
-
-mod pml4;
-
-pub const PHYS_VIRT_OFFSET: u64 = 0xFFFF_8000_0000_0000;
-pub const KERNEL_VIRT_OFFSET: u64 = 0xFFFF_FFFF_8000_0000;
+pub const PHYS_VIRT_OFFSET: usize = 0xFFFF_8000_0000_0000;
+pub const KERNEL_VIRT_OFFSET: usize = 0xFFFF_FFFF_8000_0000;
 
 #[derive(Debug)]
-struct PageTableOffsets {
+pub struct PageTableOffsets {
     pub pml4: usize,
-    pub pml3: usize,
-    pub pml2: usize,
-    pub pml1: usize,
+    pub pdp: usize,
+    pub pd: usize,
+    pub pt: usize,
 }
 
 impl PageTableOffsets {
     #[inline]
-    pub fn new(virtual_address: u64) -> Self {
+    pub fn new(virtual_address: usize) -> Self {
         Self {
-            pml4: virtual_address.bit_range(39..48).try_into().unwrap(),
-            pml3: virtual_address.bit_range(30..39).try_into().unwrap(),
-            pml2: virtual_address.bit_range(21..30).try_into().unwrap(),
-            pml1: virtual_address.bit_range(12..21).try_into().unwrap(),
+            pml4: (virtual_address >> 39) & 0x1FF,
+            pdp: (virtual_address >> 30) & 0x1FF,
+            pd: (virtual_address >> 21) & 0x1FF,
+            pt: (virtual_address >> 12) & 0x1FF,
         }
     }
 }
@@ -43,13 +39,13 @@ pub struct PageTableEntry {
     pub present: bool,
     pub writable: bool,
     pub user: bool,
-    pub wt: bool,
-    pub no_cache: bool,
+    pub pat0: bool,
+    pub pat1: bool,
     #[skip(setters)]
     pub accessed: bool,
     #[skip(setters)]
     pub dirty: bool,
-    pub huge: bool,
+    pub huge_or_pat2: bool,
     pub global: bool,
     pub available_to_os: B3,
     pub address: B40,
@@ -57,8 +53,8 @@ pub struct PageTableEntry {
     pub no_execute: bool,
 }
 
-#[derive(Debug, Clone, Copy)]
-#[repr(C, packed)]
+#[repr(C, align(4096))]
+#[derive(Debug)]
 pub struct PageTable {
     pub entries: [PageTableEntry; 512],
 }
@@ -73,38 +69,6 @@ impl PageTable {
     pub fn new() -> Self {
         Self {
             entries: [PageTableEntry::default(); 512],
-        }
-    }
-
-    #[inline]
-    pub fn get_or_alloc_entry(&mut self, offset: usize, flags: PageTableEntry) -> &mut Self {
-        let entry = &mut self.entries[offset];
-
-        if !entry.present() {
-            let table = Box::new(Self::new());
-
-            entry.set_address((Box::leak(table) as *mut _ as u64) >> 12);
-            entry.set_present(flags.present());
-            entry.set_writable(flags.writable());
-            entry.set_user(flags.user());
-            entry.set_wt(flags.wt());
-            entry.set_no_cache(flags.no_cache());
-            entry.set_huge(flags.huge());
-            entry.set_global(flags.global());
-            entry.set_no_execute(flags.no_execute());
-        }
-
-        unsafe { &mut *((entry.address() << 12) as *mut Self) }
-    }
-
-    #[inline]
-    pub fn get_or_null_entry(&self, offset: usize) -> Option<&mut Self> {
-        let entry = &self.entries[offset];
-
-        if !entry.present() {
-            None
-        } else {
-            Some(unsafe { &mut *((entry.address() << 12) as *mut Self) })
         }
     }
 }
