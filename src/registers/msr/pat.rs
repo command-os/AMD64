@@ -43,6 +43,6 @@ impl super::Msr for Pat {
     }
 
     fn into_bytes(self) -> [u8; 8] {
-        Pat::into_bytes(self)
+        Self::into_bytes(self)
     }
 }

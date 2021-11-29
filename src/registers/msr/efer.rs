@@ -37,6 +37,6 @@ impl super::Msr for Efer {
     }
 
     fn into_bytes(self) -> [u8; 8] {
-        Efer::into_bytes(self)
+        Self::into_bytes(self)
     }
 }

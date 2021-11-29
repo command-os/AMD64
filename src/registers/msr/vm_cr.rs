@@ -26,6 +26,6 @@ impl super::Msr for VmCr {
     }
 
     fn into_bytes(self) -> [u8; 8] {
-        VmCr::into_bytes(self)
+        Self::into_bytes(self)
     }
 }
