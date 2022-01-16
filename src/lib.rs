@@ -5,7 +5,6 @@
 
 #![no_std]
 #![deny(warnings, clippy::cargo, unused_extern_crates, rust_2021_compatibility)]
-#![feature(asm)]
 #![feature(const_fn_trait_bound)]
 #![feature(derive_default_enum)]
 

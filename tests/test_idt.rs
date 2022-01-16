@@ -1,3 +1,5 @@
+#![deny(warnings, clippy::cargo, unused_extern_crates, rust_2021_compatibility)]
+
 #[test]
 fn idt_interrupt_gate() {
     assert_eq!(

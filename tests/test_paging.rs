@@ -1,4 +1,4 @@
-#![feature(asm)]
+#![deny(warnings, clippy::cargo, unused_extern_crates, rust_2021_compatibility)]
 
 amd64::impl_pml4!(
     Box::leak(Box::new(amd64::paging::PageTable::new())) as *mut _ as usize,

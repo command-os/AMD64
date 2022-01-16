@@ -1,4 +1,6 @@
-#![allow(clippy::unnecessary_cast)]
+#![allow(clippy::return_self_not_must_use, clippy::unnecessary_cast)]
+
+use core::arch::asm;
 
 use modular_bitfield::prelude::*;
 

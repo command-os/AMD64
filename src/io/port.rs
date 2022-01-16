@@ -3,7 +3,9 @@
  * This project is licensed by the Creative Commons Attribution-NoCommercial-NoDerivatives licence.
  */
 
-pub trait PortInOut {
+use core::arch::asm;
+
+pub trait PortInOut: Sized {
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
     unsafe fn read(port: u16) -> Self;

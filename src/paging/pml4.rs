@@ -6,6 +6,8 @@
 #[macro_export]
 macro_rules! impl_pml4 {
     ($expression:expr, $virt_off:expr) => {
+        use core::arch::asm;
+
         #[repr(transparent)]
         #[derive(Debug)]
         pub struct Pml4(pub amd64::paging::PageTable);

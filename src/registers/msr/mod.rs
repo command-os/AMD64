@@ -3,12 +3,7 @@
  * This project is licensed by the Creative Commons Attribution-NoCommercial-NoDerivatives licence.
  */
 
-#![allow(
-    clippy::must_use_candidate,
-    clippy::map_unwrap_or,
-    clippy::unnecessary_cast,
-    clippy::cast_possible_truncation
-)]
+use core::arch::asm;
 
 pub use efer::*;
 pub use pat::*;
