@@ -29,6 +29,7 @@ pub trait Msr {
         asm!("rdmsr", in("ecx") Self::MSR_NUM, out("eax") low, out("edx") high, options(nomem, nostack, preserves_flags));
         Self::from_bytes(((u64::from(high) << 32) | u64::from(low)).to_le_bytes())
     }
+    
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
     unsafe fn write(&self)

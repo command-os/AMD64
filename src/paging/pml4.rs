@@ -38,15 +38,7 @@ pub trait Pml4: Sized {
         let entry = self.get_entry(offset);
 
         if !entry.present() {
-            entry.set_address((Self::alloc_entry() >> 12) as u64);
-            entry.set_present(flags.present());
-            entry.set_writable(flags.writable());
-            entry.set_user(flags.user());
-            entry.set_pat0(flags.pat0());
-            entry.set_pat1(flags.pat1());
-            entry.set_huge_or_pat2(flags.huge_or_pat2());
-            entry.set_global(flags.global());
-            entry.set_no_execute(flags.no_execute());
+            *entry = flags.with_address((Self::alloc_entry() >> 12) as u64);
         }
 
         (((entry.address() << 12) as usize + Self::VIRT_OFF) as *mut Self)
@@ -60,14 +52,14 @@ pub trait Pml4: Sized {
     unsafe fn get_or_null_entry(&mut self, offset: usize) -> Option<&mut Self> {
         let entry = self.get_entry(offset);
 
-        if !entry.present() {
-            None
-        } else {
+        if entry.present() {
             Some(
                 (((entry.address() << 12) as usize + Self::VIRT_OFF) as *mut Self)
                     .as_mut()
                     .unwrap(),
             )
+        } else {
+            None
         }
     }
 
@@ -79,7 +71,7 @@ pub trait Pml4: Sized {
         let pdp = self.get_or_null_entry(offs.pml4)?;
         let pd = pdp.get_or_null_entry(offs.pdp)?;
 
-        if pd.get_entry(offs.pd).huge_or_pat2() {
+        if pd.get_entry(offs.pd).huge_or_pat() {
             Some((pd.get_entry(offs.pd).address() << 12) as usize)
         } else {
             let pt = pd.get_or_null_entry(offs.pd)?;
@@ -133,7 +125,7 @@ pub trait Pml4: Sized {
             let pd = pdp.get_or_alloc_entry(offs.pdp, flags);
             *pd.get_entry(offs.pd) = flags
                 .with_present(true)
-                .with_huge_or_pat2(true)
+                .with_huge_or_pat(true)
                 .with_address((physical_address >> 12) as u64);
         }
     }

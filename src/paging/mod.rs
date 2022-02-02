@@ -39,13 +39,13 @@ pub struct PageTableEntry {
     pub present: bool,
     pub writable: bool,
     pub user: bool,
-    pub pat0: bool,
-    pub pat1: bool,
+    pub pwt: bool,
+    pub pcd: bool,
     #[skip(setters)]
     pub accessed: bool,
     #[skip(setters)]
     pub dirty: bool,
-    pub huge_or_pat2: bool,
+    pub huge_or_pat: bool,
     pub global: bool,
     pub available_to_os: B3,
     pub address: B40,
