@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) VisualDevelopment 2021-2021.
+ * This project is licensed by the Creative Commons Attribution-NoCommercial-NoDerivatives licence.
+ */
+
 #![deny(warnings, clippy::cargo, unused_extern_crates, rust_2021_compatibility)]
 
 use amd64::paging::pml4::Pml4 as Pml4Trait;
