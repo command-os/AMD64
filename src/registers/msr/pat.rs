@@ -25,21 +25,29 @@ pub enum PatEntry {
 #[repr(u64)]
 pub struct Pat {
     pub pat0: PatEntry,
-    #[skip] __: B5,
+    #[skip]
+    __: B5,
     pub pat1: PatEntry,
-    #[skip] __: B5,
+    #[skip]
+    __: B5,
     pub pat2: PatEntry,
-    #[skip] __: B5,
+    #[skip]
+    __: B5,
     pub pat3: PatEntry,
-    #[skip] __: B5,
+    #[skip]
+    __: B5,
     pub pat4: PatEntry,
-    #[skip] __: B5,
+    #[skip]
+    __: B5,
     pub pat5: PatEntry,
-    #[skip] __: B5,
+    #[skip]
+    __: B5,
     pub pat6: PatEntry,
-    #[skip] __: B5,
+    #[skip]
+    __: B5,
     pub pat7: PatEntry,
-    #[skip] __: B5,
+    #[skip]
+    __: B5,
 }
 
 impl super::Msr for Pat {
