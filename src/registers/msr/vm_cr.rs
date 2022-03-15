@@ -22,10 +22,10 @@ impl super::Msr for VmCr {
     const MSR_NUM: u32 = 0xC001_0114;
 
     fn from_bytes(bytes: [u8; 8]) -> Self {
-        Self::from_bytes(bytes)
+        VmCr::from_bytes(bytes)
     }
 
     fn into_bytes(self) -> [u8; 8] {
-        Self::into_bytes(self)
+        VmCr::into_bytes(self)
     }
 }

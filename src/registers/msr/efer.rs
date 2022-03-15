@@ -33,10 +33,10 @@ impl super::Msr for Efer {
     const MSR_NUM: u32 = 0xC000_0080;
 
     fn from_bytes(bytes: [u8; 8]) -> Self {
-        Self::from_bytes(bytes)
+        Efer::from_bytes(bytes)
     }
 
     fn into_bytes(self) -> [u8; 8] {
-        Self::into_bytes(self)
+        Efer::into_bytes(self)
     }
 }

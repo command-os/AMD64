@@ -52,10 +52,10 @@ impl super::Msr for Pat {
     const MSR_NUM: u32 = 0x227;
 
     fn from_bytes(bytes: [u8; 8]) -> Self {
-        Self::from_bytes(bytes)
+        Pat::from_bytes(bytes)
     }
 
     fn into_bytes(self) -> [u8; 8] {
-        Self::into_bytes(self)
+        Pat::into_bytes(self)
     }
 }
