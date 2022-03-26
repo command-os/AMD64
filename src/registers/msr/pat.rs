@@ -50,12 +50,4 @@ pub struct Pat {
 
 impl super::Msr for Pat {
     const MSR_NUM: u32 = 0x227;
-
-    fn from_bytes(bytes: [u8; 8]) -> Self {
-        Pat::from_bytes(bytes)
-    }
-
-    fn into_bytes(self) -> [u8; 8] {
-        Pat::into_bytes(self)
-    }
 }

@@ -6,8 +6,8 @@
 use modular_bitfield::prelude::*;
 
 #[bitfield(bits = 64)]
-#[repr(u64)]
 #[derive(BitfieldSpecifier, Debug, Default, Clone, Copy)]
+#[repr(u64)]
 pub struct Efer {
     pub syscall_ext: bool,
     #[skip]
@@ -31,12 +31,4 @@ pub struct Efer {
 
 impl super::Msr for Efer {
     const MSR_NUM: u32 = 0xC000_0080;
-
-    fn from_bytes(bytes: [u8; 8]) -> Self {
-        Efer::from_bytes(bytes)
-    }
-
-    fn into_bytes(self) -> [u8; 8] {
-        Efer::into_bytes(self)
-    }
 }
