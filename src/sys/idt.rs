@@ -37,7 +37,7 @@ pub struct Entry {
     pub flags: EntryFlags,
     pub offset_middle: u16,
     pub offset_high: u32,
-    _reserved: u32,
+    __: u32,
 }
 
 impl Entry {
@@ -58,7 +58,7 @@ impl Entry {
             ]),
             offset_middle: (base >> 16) as u16,
             offset_high: (base >> 32) as u32,
-            _reserved: 0,
+            __: 0,
         }
     }
 }

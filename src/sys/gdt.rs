@@ -11,16 +11,15 @@ use modular_bitfield::prelude::*;
 #[bits = 5]
 #[repr(u8)]
 pub enum DescriptorType {
+    #[default]
+    None = 0b0,
     CodeSegment = 0b11010,
     DataSegment = 0b10010,
     TaskSegment = 0b01001,
-    #[default]
-    None = 0b0,
 }
 
 #[bitfield(bits = 16)]
 #[derive(Debug, Default, BitfieldSpecifier, Clone, Copy, PartialEq, Eq)]
-#[repr(C)]
 pub struct SegmentAttributes {
     pub ty: DescriptorType,
     pub dpl: B2,

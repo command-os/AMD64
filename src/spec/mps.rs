@@ -5,7 +5,7 @@
 
 use modular_bitfield::prelude::*;
 
-#[derive(BitfieldSpecifier)]
+#[derive(BitfieldSpecifier, Debug, Clone, Copy)]
 #[bits = 2]
 pub enum Polarity {
     ConformToBusSpec = 0,
@@ -13,7 +13,7 @@ pub enum Polarity {
     ActiveLow = 0b11,
 }
 
-#[derive(BitfieldSpecifier)]
+#[derive(BitfieldSpecifier, Debug, Clone, Copy)]
 #[bits = 2]
 pub enum TriggerMode {
     ConformToBusSpec = 0,
@@ -22,13 +22,13 @@ pub enum TriggerMode {
 }
 
 #[bitfield(bits = 16)]
-#[repr(C, u16)]
 #[derive(Debug, Clone, Copy)]
+#[repr(u16)]
 pub struct Inti {
     #[skip(setters)]
-    pub polarity: B2,
+    pub polarity: Polarity,
     #[skip(setters)]
-    pub trigger_mode: B2,
+    pub trigger_mode: TriggerMode,
     #[skip]
-    reserved: B12,
+    __: B12,
 }
