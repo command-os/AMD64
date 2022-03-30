@@ -5,7 +5,7 @@
 
 use modular_bitfield::prelude::*;
 
-#[derive(BitfieldSpecifier, Debug, Clone, Copy)]
+#[derive(BitfieldSpecifier, Debug, Clone, Copy, PartialEq, Eq)]
 #[bits = 2]
 pub enum Polarity {
     ConformToBusSpec = 0,
@@ -13,7 +13,7 @@ pub enum Polarity {
     ActiveLow = 0b11,
 }
 
-#[derive(BitfieldSpecifier, Debug, Clone, Copy)]
+#[derive(BitfieldSpecifier, Debug, Clone, Copy, PartialEq, Eq)]
 #[bits = 2]
 pub enum TriggerMode {
     ConformToBusSpec = 0,
