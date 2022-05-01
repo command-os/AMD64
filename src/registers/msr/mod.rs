@@ -1,15 +1,12 @@
 //! Copyright (c) VisualDevelopment 2021-2022.
 //! This project is licensed by the Creative Commons Attribution-NoCommercial-NoDerivatives licence.
 
+pub mod apic;
+pub mod efer;
+pub mod pat;
+pub mod vm_cr;
+
 use core::arch::asm;
-
-pub use efer::*;
-pub use pat::*;
-pub use vm_cr::*;
-
-mod efer;
-mod pat;
-mod vm_cr;
 
 pub trait Msr {
     const MSR_NUM: u32;
