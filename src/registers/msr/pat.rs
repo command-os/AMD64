@@ -47,5 +47,5 @@ pub struct Pat {
 }
 
 impl super::Msr for Pat {
-    const MSR_NUM: u32 = 0x227;
+    const MSR_NUM: u32 = 0x277;
 }
