@@ -4,7 +4,7 @@
 pub mod cpuid;
 
 #[derive(Debug, Clone, Copy)]
-#[repr(C, packed)]
+#[repr(C)]
 pub struct RegisterState {
     pub r15: u64,
     pub r14: u64,
