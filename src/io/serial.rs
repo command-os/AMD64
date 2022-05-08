@@ -104,7 +104,7 @@ impl SerialPort {
     }
 
     fn can_send_data(&self) -> bool {
-        LineStatus::from_bytes(unsafe { self.line_sts.read() }.to_le_bytes()).transmitter_empty()
+        LineStatus::from(unsafe { self.line_sts.read() }).transmitter_empty()
     }
 
     pub fn init(&self) {
@@ -112,28 +112,27 @@ impl SerialPort {
             // Disable interrupts
             self.enable_intr_or_divisor_high.write(0);
             // Enable DLAB
-            self.line_ctl.write(u8::from_le_bytes(
-                LineControl::new().with_dlab(true).into_bytes(),
-            ));
+            self.line_ctl
+                .write(LineControl::new().with_dlab(true).into());
             // Set divisor to 1
             self.data_or_divisor_low.write(1);
             self.enable_intr_or_divisor_high.write(0);
             // 8 bits, no parity, one stop bit
-            self.line_ctl.write(u8::from_le_bytes(
+            self.line_ctl.write(
                 LineControl::new()
                     .with_parity(Parity::None)
                     .with_data_bits(DataBits::EightBits)
-                    .into_bytes(),
-            ));
+                    .into(),
+            );
             // Disable FIFO
             self.intr_id_or_fifo.write(0);
             // Enable data terminal
-            self.modem_ctl.write(u8::from_le_bytes(
+            self.modem_ctl.write(
                 ModemControl::new()
                     .with_terminal_ready(true)
                     .with_aux_out_2(true)
-                    .into_bytes(),
-            ));
+                    .into(),
+            );
         }
     }
 
@@ -144,7 +143,7 @@ impl SerialPort {
     }
 
     fn can_receive_data(&self) -> bool {
-        LineStatus::from_bytes(unsafe { self.line_sts.read() }.to_le_bytes()).data_ready()
+        LineStatus::from(unsafe { self.line_sts.read() }).data_ready()
     }
 
     pub fn receive(&self) -> u8 {

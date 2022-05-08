@@ -8,14 +8,14 @@ pub mod vm_cr;
 
 use core::arch::asm;
 
-pub trait Msr {
+pub trait Msr: Sized {
     const MSR_NUM: u32;
 
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
     unsafe fn read() -> Self
     where
-        Self: Sized + From<u64>,
+        Self: From<u64>,
     {
         let (low, high): (u32, u32);
         asm!("rdmsr", in("ecx") Self::MSR_NUM, out("eax") low, out("edx") high, options(nomem, nostack, preserves_flags));
@@ -26,7 +26,6 @@ pub trait Msr {
     /// The caller must ensure that this operation has no unsafe side effects.
     unsafe fn write(self)
     where
-        Self: Sized + Copy,
         u64: From<Self>,
     {
         let value = u64::from(self);

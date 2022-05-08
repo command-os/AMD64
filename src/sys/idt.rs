@@ -15,7 +15,7 @@ pub enum EntryType {
 
 #[bitfield(bits = 16)]
 #[derive(Debug, BitfieldSpecifier, Clone, Copy, PartialEq, Eq)]
-#[repr(C)]
+#[repr(u16)]
 pub struct EntryFlags {
     pub ist: B3,
     #[skip]

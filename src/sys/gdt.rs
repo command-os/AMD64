@@ -18,6 +18,7 @@ pub enum DescriptorType {
 
 #[bitfield(bits = 16)]
 #[derive(Debug, Default, BitfieldSpecifier, Clone, Copy, PartialEq, Eq)]
+#[repr(u16)]
 pub struct SegmentAttributes {
     pub ty: DescriptorType,
     pub dpl: B2,

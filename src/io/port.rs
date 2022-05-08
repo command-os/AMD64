@@ -50,7 +50,7 @@ impl PortInOut for u32 {
 
 pub struct Port<T: PortInOut> {
     port: u16,
-    _phantom: core::marker::PhantomData<T>,
+    __: core::marker::PhantomData<T>,
 }
 
 impl<T: PortInOut> Port<T> {
@@ -58,7 +58,7 @@ impl<T: PortInOut> Port<T> {
     pub const fn new(port: u16) -> Self {
         Self {
             port,
-            _phantom: core::marker::PhantomData,
+            __: core::marker::PhantomData,
         }
     }
 
