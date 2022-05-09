@@ -48,30 +48,32 @@ impl PortInOut for u32 {
     }
 }
 
-pub struct Port<T: PortInOut> {
+pub struct Port<T: PortInOut, R: From<T> + Into<T>> {
     port: u16,
     __: core::marker::PhantomData<T>,
+    ___: core::marker::PhantomData<R>,
 }
 
-impl<T: PortInOut> Port<T> {
+impl<T: PortInOut, R: From<T> + Into<T>> Port<T, R> {
     #[must_use]
     pub const fn new(port: u16) -> Self {
         Self {
             port,
             __: core::marker::PhantomData,
+            ___: core::marker::PhantomData,
         }
     }
 
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
     #[must_use]
-    pub unsafe fn read(&self) -> T {
-        T::read(self.port)
+    pub unsafe fn read(&self) -> R {
+        T::read(self.port).into()
     }
 
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
-    pub unsafe fn write(&self, value: T) {
-        T::write(self.port, value);
+    pub unsafe fn write(&self, value: R) {
+        T::write(self.port, value.into());
     }
 }

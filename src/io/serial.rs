@@ -83,28 +83,28 @@ pub struct ModemControl {
 
 #[allow(dead_code)]
 pub struct SerialPort {
-    data_or_divisor_low: super::port::Port<u8>,
-    enable_intr_or_divisor_high: super::port::Port<u8>,
-    intr_id_or_fifo: super::port::Port<u8>,
-    line_ctl: super::port::Port<u8>,
-    modem_ctl: super::port::Port<u8>,
-    line_sts: super::port::Port<u8>,
+    data_or_divisor_low: super::port::Port<u8, u8>,
+    enable_intr_or_divisor_high: super::port::Port<u8, u8>,
+    intr_id_or_fifo: super::port::Port<u8, u8>,
+    line_ctl: super::port::Port<u8, LineControl>,
+    modem_ctl: super::port::Port<u8, ModemControl>,
+    line_sts: super::port::Port<u8, LineStatus>,
 }
 
 impl SerialPort {
     pub const fn new(port_num: u16) -> Self {
         Self {
-            data_or_divisor_low: super::port::Port::<u8>::new(port_num),
-            enable_intr_or_divisor_high: super::port::Port::<u8>::new(port_num + 1),
-            intr_id_or_fifo: super::port::Port::<u8>::new(port_num + 2),
-            line_ctl: super::port::Port::<u8>::new(port_num + 3),
-            modem_ctl: super::port::Port::<u8>::new(port_num + 4),
-            line_sts: super::port::Port::<u8>::new(port_num + 5),
+            data_or_divisor_low: super::port::Port::new(port_num),
+            enable_intr_or_divisor_high: super::port::Port::new(port_num + 1),
+            intr_id_or_fifo: super::port::Port::new(port_num + 2),
+            line_ctl: super::port::Port::new(port_num + 3),
+            modem_ctl: super::port::Port::new(port_num + 4),
+            line_sts: super::port::Port::new(port_num + 5),
         }
     }
 
     fn can_send_data(&self) -> bool {
-        LineStatus::from(unsafe { self.line_sts.read() }).transmitter_empty()
+        unsafe { self.line_sts.read().transmitter_empty() }
     }
 
     pub fn init(&self) {
@@ -112,8 +112,7 @@ impl SerialPort {
             // Disable interrupts
             self.enable_intr_or_divisor_high.write(0);
             // Enable DLAB
-            self.line_ctl
-                .write(LineControl::new().with_dlab(true).into());
+            self.line_ctl.write(LineControl::new().with_dlab(true));
             // Set divisor to 1
             self.data_or_divisor_low.write(1);
             self.enable_intr_or_divisor_high.write(0);
@@ -121,8 +120,7 @@ impl SerialPort {
             self.line_ctl.write(
                 LineControl::new()
                     .with_parity(Parity::None)
-                    .with_data_bits(DataBits::EightBits)
-                    .into(),
+                    .with_data_bits(DataBits::EightBits),
             );
             // Disable FIFO
             self.intr_id_or_fifo.write(0);
@@ -130,8 +128,7 @@ impl SerialPort {
             self.modem_ctl.write(
                 ModemControl::new()
                     .with_terminal_ready(true)
-                    .with_aux_out_2(true)
-                    .into(),
+                    .with_aux_out_2(true),
             );
         }
     }
@@ -143,7 +140,7 @@ impl SerialPort {
     }
 
     fn can_receive_data(&self) -> bool {
-        LineStatus::from(unsafe { self.line_sts.read() }).data_ready()
+        unsafe { self.line_sts.read().data_ready() }
     }
 
     pub fn receive(&self) -> u8 {
