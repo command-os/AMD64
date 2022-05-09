@@ -13,36 +13,42 @@ pub trait PortInOut: Sized {
 }
 
 impl PortInOut for u8 {
+    #[inline]
     unsafe fn read(port: u16) -> Self {
         let ret: Self;
         asm!("in al, dx", out("al") ret, in("dx") port, options(nomem, nostack, preserves_flags));
         ret
     }
 
+    #[inline]
     unsafe fn write(port: u16, value: Self) {
         asm!("out dx, al", in("dx") port, in("al") value, options(nomem, nostack, preserves_flags));
     }
 }
 
 impl PortInOut for u16 {
+    #[inline]
     unsafe fn read(port: u16) -> Self {
         let ret: Self;
         asm!("in ax, dx", out("ax") ret, in("dx") port, options(nomem, nostack, preserves_flags));
         ret
     }
 
+    #[inline]
     unsafe fn write(port: u16, value: Self) {
         asm!("out dx, ax", in("dx") port, in("ax") value, options(nomem, nostack, preserves_flags));
     }
 }
 
 impl PortInOut for u32 {
+    #[inline]
     unsafe fn read(port: u16) -> Self {
         let ret: Self;
         asm!("in eax, dx", out("eax") ret, in("dx") port, options(nomem, nostack, preserves_flags));
         ret
     }
 
+    #[inline]
     unsafe fn write(port: u16, value: Self) {
         asm!("out dx, eax", in("dx") port, in("eax") value, options(nomem, nostack, preserves_flags));
     }
@@ -67,12 +73,14 @@ impl<T: PortInOut, R: From<T> + Into<T>> Port<T, R> {
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
     #[must_use]
+    #[inline]
     pub unsafe fn read(&self) -> R {
         T::read(self.port).into()
     }
 
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
+    #[inline]
     pub unsafe fn write(&self, value: R) {
         T::write(self.port, value.into());
     }
