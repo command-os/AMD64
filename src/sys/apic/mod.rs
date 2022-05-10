@@ -133,7 +133,7 @@ impl LocalApic {
 
     #[inline]
     pub fn send_eoi(&self) {
-        self.write_reg(LocalApicRegister::EndOfInterrupt, 1u32);
+        self.write_reg(LocalApicRegister::EndOfInterrupt, 0u32);
     }
 
     #[inline]
