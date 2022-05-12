@@ -10,9 +10,13 @@ use modular_bitfield::prelude::*;
 #[derive(Debug, Clone, Copy)]
 #[repr(u32)]
 pub struct FeaturesMisc {
+    #[skip(setters)]
     pub brand_id: u8,
+    #[skip(setters)]
     pub clflush: u8,
+    #[skip(setters)]
     pub proc_count: u8,
+    #[skip(setters)]
     pub apic_id: u8,
 }
 
