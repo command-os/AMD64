@@ -78,7 +78,7 @@ unsafe impl Sync for Gdtr {}
 impl Gdtr {
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
-    pub unsafe fn load(&self, cs: super::cpu::SegmentSelector, ds: super::cpu::SegmentSelector) {
+    pub unsafe fn load(&self, cs: super::SegmentSelector, ds: super::SegmentSelector) {
         asm!(
             "lgdt [{}]",
             "push {}",

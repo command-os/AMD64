@@ -2,6 +2,7 @@
 //! This project is licensed by the Creative Commons Attribution-NoCommercial-NoDerivatives licence.
 
 pub mod cpuid;
+pub mod gdt;
 
 #[derive(Debug, Clone, Copy)]
 #[repr(C)]

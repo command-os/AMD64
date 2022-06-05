@@ -5,6 +5,8 @@ use core::arch::asm;
 
 use modular_bitfield::prelude::*;
 
+use crate::cpu::SegmentSelector;
+
 #[derive(Debug, BitfieldSpecifier, Clone, Copy, PartialEq, Eq)]
 #[bits = 4]
 #[repr(u8)]
@@ -31,7 +33,7 @@ pub struct EntryFlags {
 #[repr(C, packed)]
 pub struct Entry {
     pub offset_low: u16,
-    pub selector: super::cpu::SegmentSelector,
+    pub selector: SegmentSelector,
     pub flags: EntryFlags,
     pub offset_middle: u16,
     pub offset_high: u32,
@@ -41,7 +43,7 @@ pub struct Entry {
 impl Entry {
     pub const fn new(
         base: u64,
-        selector: super::cpu::SegmentSelector,
+        selector: SegmentSelector,
         ist: u8,
         ty: EntryType,
         dpl: u8,

@@ -3,21 +3,26 @@
 
 #![deny(warnings, clippy::cargo, unused_extern_crates, rust_2021_compatibility)]
 
+use amd64::{
+    cpu::{PrivilegeLevel, SegmentSelector},
+    intrs::idt::{Entry, EntryFlags, EntryType},
+};
+
 #[test]
 fn idt_interrupt_gate() {
     assert_eq!(
-        amd64::sys::idt::Entry::new(
+        Entry::new(
             0,
-            amd64::sys::cpu::SegmentSelector::new(0, amd64::sys::cpu::PrivilegeLevel::Hypervisor),
+            SegmentSelector::new(0, PrivilegeLevel::Hypervisor),
             0,
-            amd64::sys::idt::EntryType::InterruptGate,
+            EntryType::InterruptGate,
             0,
             true
         )
         .flags,
-        amd64::sys::idt::EntryFlags::new()
+        EntryFlags::new()
             .with_ist(0)
-            .with_ty(amd64::sys::idt::EntryType::InterruptGate)
+            .with_ty(EntryType::InterruptGate)
             .with_dpl(0)
             .with_present(true)
     );
@@ -26,18 +31,18 @@ fn idt_interrupt_gate() {
 #[test]
 fn idt_interrupt_gate_user() {
     assert_eq!(
-        amd64::sys::idt::Entry::new(
+        Entry::new(
             0,
-            amd64::sys::cpu::SegmentSelector::new(0, amd64::sys::cpu::PrivilegeLevel::User),
+            SegmentSelector::new(0, PrivilegeLevel::User),
             0,
-            amd64::sys::idt::EntryType::InterruptGate,
+            EntryType::InterruptGate,
             3,
             true
         )
         .flags,
-        amd64::sys::idt::EntryFlags::new()
+        EntryFlags::new()
             .with_ist(0)
-            .with_ty(amd64::sys::idt::EntryType::InterruptGate)
+            .with_ty(EntryType::InterruptGate)
             .with_dpl(3)
             .with_present(true)
     );

@@ -3,15 +3,14 @@
 
 #![deny(warnings, clippy::cargo, unused_extern_crates, rust_2021_compatibility)]
 
+use amd64::cpu::gdt::{DescriptorType, SegmentAttributes, SegmentDescriptor};
+
 #[test]
 fn code_segment_desc() {
     assert_eq!(
-        amd64::sys::gdt::SegmentDescriptor::new_from_ty(
-            amd64::sys::gdt::DescriptorType::CodeSegment
-        )
-        .attrs,
-        amd64::sys::gdt::SegmentAttributes::new()
-            .with_ty(amd64::sys::gdt::DescriptorType::CodeSegment)
+        SegmentDescriptor::new_from_ty(DescriptorType::CodeSegment).attrs,
+        SegmentAttributes::new()
+            .with_ty(DescriptorType::CodeSegment)
             .with_present(true)
             .with_long(true)
     );
@@ -20,12 +19,9 @@ fn code_segment_desc() {
 #[test]
 fn data_segment_desc() {
     assert_eq!(
-        amd64::sys::gdt::SegmentDescriptor::new_from_ty(
-            amd64::sys::gdt::DescriptorType::DataSegment
-        )
-        .attrs,
-        amd64::sys::gdt::SegmentAttributes::new()
-            .with_ty(amd64::sys::gdt::DescriptorType::DataSegment)
+        SegmentDescriptor::new_from_ty(DescriptorType::DataSegment).attrs,
+        SegmentAttributes::new()
+            .with_ty(DescriptorType::DataSegment)
             .with_present(true)
     );
 }
@@ -33,19 +29,15 @@ fn data_segment_desc() {
 #[test]
 fn task_segment_desc() {
     assert_eq!(
-        amd64::sys::gdt::SegmentDescriptor::new_from_ty(
-            amd64::sys::gdt::DescriptorType::TaskSegment
-        )
-        .attrs,
-        amd64::sys::gdt::SegmentAttributes::new()
-            .with_ty(amd64::sys::gdt::DescriptorType::TaskSegment)
+        SegmentDescriptor::new_from_ty(DescriptorType::TaskSegment).attrs,
+        SegmentAttributes::new().with_ty(DescriptorType::TaskSegment)
     );
 }
 
 #[test]
 fn null_segment_desc() {
     assert_eq!(
-        amd64::sys::gdt::SegmentDescriptor::default().attrs,
-        amd64::sys::gdt::SegmentAttributes::new().with_present(true)
+        SegmentDescriptor::default().attrs,
+        SegmentAttributes::new().with_present(true)
     );
 }
