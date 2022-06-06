@@ -6,7 +6,7 @@ use modular_bitfield::prelude::*;
 #[derive(BitfieldSpecifier, Debug, Default, Clone, Copy)]
 #[bits = 3]
 #[repr(u8)]
-pub enum PatEntry {
+pub enum PATEntry {
     #[default]
     Uncacheable = 0x0,
     WriteCombining = 0x1,
@@ -19,33 +19,33 @@ pub enum PatEntry {
 #[bitfield(bits = 64)]
 #[derive(BitfieldSpecifier, Debug, Default, Clone, Copy)]
 #[repr(u64)]
-pub struct Pat {
-    pub pat0: PatEntry,
+pub struct PageAttributeTable {
+    pub pat0: PATEntry,
     #[skip]
     __: B5,
-    pub pat1: PatEntry,
+    pub pat1: PATEntry,
     #[skip]
     __: B5,
-    pub pat2: PatEntry,
+    pub pat2: PATEntry,
     #[skip]
     __: B5,
-    pub pat3: PatEntry,
+    pub pat3: PATEntry,
     #[skip]
     __: B5,
-    pub pat4: PatEntry,
+    pub pat4: PATEntry,
     #[skip]
     __: B5,
-    pub pat5: PatEntry,
+    pub pat5: PATEntry,
     #[skip]
     __: B5,
-    pub pat6: PatEntry,
+    pub pat6: PATEntry,
     #[skip]
     __: B5,
-    pub pat7: PatEntry,
+    pub pat7: PATEntry,
     #[skip]
     __: B5,
 }
 
-impl super::Msr for Pat {
+impl super::ModelSpecificReg for PageAttributeTable {
     const MSR_NUM: u32 = 0x277;
 }

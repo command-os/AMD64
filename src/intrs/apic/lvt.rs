@@ -6,7 +6,7 @@ use modular_bitfield::prelude::*;
 #[bitfield(bits = 32)]
 #[derive(Debug, BitfieldSpecifier, Default, Clone, Copy, PartialEq, Eq)]
 #[repr(u32)]
-pub struct Lvt {
+pub struct LocalVectorTable {
     pub vector: u8,
     pub delivery_mode: super::DeliveryMode,
     #[skip]
@@ -50,7 +50,7 @@ pub enum TimerMode {
 #[bitfield(bits = 32)]
 #[derive(Debug, BitfieldSpecifier, Default, Clone, Copy, PartialEq, Eq)]
 #[repr(u32)]
-pub struct LvtTimer {
+pub struct TimerLVT {
     pub vector: u8,
     #[skip]
     __: B4,

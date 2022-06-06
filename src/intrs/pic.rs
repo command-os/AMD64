@@ -8,14 +8,14 @@ const ICW1_INIT: u8 = 0x10;
 
 const ICW4_8086: u8 = 0x01;
 
-pub struct Pic {
+pub struct ProgrammableInterruptController {
     pub master_cmd: Port<u8, u8>,
     pub master_data: Port<u8, u8>,
     pub slave_cmd: Port<u8, u8>,
     pub slave_data: Port<u8, u8>,
 }
 
-impl Pic {
+impl ProgrammableInterruptController {
     pub const fn new() -> Self {
         Self {
             master_cmd: Port::new(0x20),

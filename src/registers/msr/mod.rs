@@ -8,7 +8,7 @@ pub mod vm_cr;
 
 use core::arch::asm;
 
-pub trait Msr: Sized {
+pub trait ModelSpecificReg: Sized {
     const MSR_NUM: u32;
 
     /// # Safety

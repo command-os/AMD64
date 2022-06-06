@@ -16,6 +16,6 @@ pub struct VmCr {
     __: B59,
 }
 
-impl super::Msr for VmCr {
+impl super::ModelSpecificReg for VmCr {
     const MSR_NUM: u32 = 0xC001_0114;
 }

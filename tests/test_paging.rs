@@ -3,13 +3,13 @@
 
 #![deny(warnings, clippy::cargo, unused_extern_crates, rust_2021_compatibility)]
 
-use amd64::paging::pml4::Pml4 as Pml4Trait;
+use amd64::paging::pml4::PML4 as PML4Trait;
 
 #[repr(transparent)]
 #[derive(Debug)]
-pub struct Pml4(amd64::paging::PageTable);
+pub struct PML4(amd64::paging::PageTable);
 
-impl Pml4 {
+impl PML4 {
     pub fn new() -> Self {
         Self(amd64::paging::PageTable {
             entries: [amd64::paging::PageTableEntry::default(); 512],
@@ -17,7 +17,7 @@ impl Pml4 {
     }
 }
 
-impl Pml4Trait for Pml4 {
+impl PML4Trait for PML4 {
     const VIRT_OFF: usize = 0;
 
     fn get_entry(&mut self, offset: usize) -> &mut amd64::paging::PageTableEntry {
@@ -32,7 +32,7 @@ impl Pml4Trait for Pml4 {
 #[test]
 fn test_map_higher_half_phys() {
     unsafe {
-        let mut pml4 = Box::new(Pml4::new());
+        let mut pml4 = Box::new(PML4::new());
         pml4.map_higher_half();
 
         for i in 0..2048 {
@@ -47,7 +47,7 @@ fn test_map_higher_half_phys() {
 #[test]
 fn test_map_higher_half_kern() {
     unsafe {
-        let mut pml4 = Box::new(Pml4::new());
+        let mut pml4 = Box::new(PML4::new());
         pml4.map_higher_half();
 
         for i in 0..1024 {

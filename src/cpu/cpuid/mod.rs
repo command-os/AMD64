@@ -21,20 +21,20 @@ pub struct FeaturesMisc {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub struct CpuId {
+pub struct CPUIdentification {
     pub largest_func_id: u32,
     pub vendor_string: ArrayString<12>,
-    pub features: features::Features,
+    pub features: features::CPUFeatures,
     pub misc: FeaturesMisc,
 }
 
-impl Default for CpuId {
+impl Default for CPUIdentification {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl CpuId {
+impl CPUIdentification {
     pub fn new() -> Self {
         // Function 0
         let res = unsafe { core::arch::x86_64::__cpuid(0) };
@@ -47,7 +47,7 @@ impl CpuId {
 
         // Function 1
         let res = unsafe { core::arch::x86_64::__cpuid(1) };
-        let features = features::Features::from(res.ecx as u64 | ((res.edx as u64) << 32));
+        let features = features::CPUFeatures::from(res.ecx as u64 | ((res.edx as u64) << 32));
         let misc = FeaturesMisc::from(res.ebx);
 
         Self {

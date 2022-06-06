@@ -3,7 +3,7 @@
 
 use core::arch::asm;
 
-pub trait Pml4: Sized {
+pub trait PML4: Sized {
     const VIRT_OFF: usize;
 
     fn get_entry(&mut self, offset: usize) -> &mut super::PageTableEntry;

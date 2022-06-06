@@ -6,7 +6,7 @@ use modular_bitfield::prelude::*;
 #[bitfield(bits = 64)]
 #[derive(Debug, Clone, Copy)]
 #[repr(u64)]
-pub struct Features {
+pub struct CPUFeatures {
     // ECX
     #[skip(setters)]
     pub sse3: bool,

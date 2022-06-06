@@ -6,14 +6,14 @@ use num_enum::IntoPrimitive;
 
 mod lvt;
 
-pub struct LocalApic {
+pub struct LocalAPIC {
     addr: u64,
 }
 
 #[derive(Debug, IntoPrimitive)]
 #[repr(u64)]
-pub enum LocalApicRegister {
-    Id = 0x20,
+pub enum LocalAPICReg {
+    ID = 0x20,
     Ver = 0x30,
     TaskPriority = 0x80,
     ArbitrationPriority = 0x90,
@@ -30,12 +30,12 @@ pub enum LocalApicRegister {
     LvtCorrectedMachineCheck = 0x2F0,
     InterruptCommand = 0x300,
     InterruptCommand2 = 0x310,
-    LvtTimer = 0x320,
-    LvtThermalSensor = 0x330,
-    LvtPerfCounter = 0x340,
-    LvtLint0 = 0x350,
-    LvtLint1 = 0x360,
-    LvtError = 0x370,
+    LVTTimer = 0x320,
+    LVTThermalSensor = 0x330,
+    LVTPerfCounter = 0x340,
+    LVTLint0 = 0x350,
+    LVTLint1 = 0x360,
+    LVTError = 0x370,
     TimerInitialCount = 0x380,
     TimerCurrentCount = 0x390,
     TimerDivideConfiguration = 0x3E0,
@@ -116,7 +116,7 @@ pub struct InterruptCommand {
     pub dest: u8,
 }
 
-impl LocalApic {
+impl LocalAPIC {
     pub fn new(addr: usize) -> Self {
         Self { addr: addr as _ }
     }
@@ -133,37 +133,37 @@ impl LocalApic {
 
     #[inline]
     pub fn send_eoi(&self) {
-        self.write_reg(LocalApicRegister::EndOfInterrupt, 0u32);
+        self.write_reg(LocalAPICReg::EndOfInterrupt, 0u32);
     }
 
     #[inline]
-    pub fn read_timer(&self) -> lvt::LvtTimer {
-        self.read_reg(LocalApicRegister::LvtTimer)
+    pub fn read_timer(&self) -> lvt::TimerLVT {
+        self.read_reg(LocalAPICReg::LVTTimer)
     }
 
     #[inline]
-    pub fn write_timer(&self, val: lvt::LvtTimer) {
-        self.write_reg(LocalApicRegister::LvtTimer, val)
+    pub fn write_timer(&self, val: lvt::TimerLVT) {
+        self.write_reg(LocalAPICReg::LVTTimer, val)
     }
 
     #[inline]
-    pub fn read_lint(&self, lint1: bool) -> lvt::Lvt {
+    pub fn read_lint(&self, lint1: bool) -> lvt::LocalVectorTable {
         self.read_reg(if lint1 {
-            LocalApicRegister::LvtLint1
+            LocalAPICReg::LVTLint1
         } else {
-            LocalApicRegister::LvtLint0
+            LocalAPICReg::LVTLint0
         })
     }
 
     #[inline]
     pub fn error(&self) -> ErrorStatus {
-        self.read_reg(LocalApicRegister::ErrorStatus)
+        self.read_reg(LocalAPICReg::ErrorStatus)
     }
 
     #[inline]
     pub fn read_icr(&self) -> InterruptCommand {
-        (((self.read_reg::<_, u64>(LocalApicRegister::InterruptCommand2)) << 32)
-            | (self.read_reg::<_, u64>(LocalApicRegister::InterruptCommand)))
+        (((self.read_reg::<_, u64>(LocalAPICReg::InterruptCommand2)) << 32)
+            | (self.read_reg::<_, u64>(LocalAPICReg::InterruptCommand)))
         .into()
     }
 
@@ -172,12 +172,12 @@ impl LocalApic {
         let val: u64 = val.into();
         let a = val as u32;
         let b = (val >> 32) as u32;
-        self.write_reg(LocalApicRegister::InterruptCommand2, b);
-        self.write_reg(LocalApicRegister::InterruptCommand, a);
+        self.write_reg(LocalAPICReg::InterruptCommand2, b);
+        self.write_reg(LocalAPICReg::InterruptCommand, a);
     }
 
     #[inline]
     pub fn write_spurious_intr_vec(&self, val: SpuriousIntrVector) {
-        self.write_reg(LocalApicRegister::SpuriousInterruptVector, val)
+        self.write_reg(LocalAPICReg::SpuriousInterruptVector, val)
     }
 }

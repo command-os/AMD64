@@ -68,14 +68,14 @@ impl SegmentDescriptor {
 }
 
 #[repr(C, packed)]
-pub struct Gdtr {
+pub struct GDTReg {
     pub limit: u16,
     pub addr: *const SegmentDescriptor,
 }
 
-unsafe impl Sync for Gdtr {}
+unsafe impl Sync for GDTReg {}
 
-impl Gdtr {
+impl GDTReg {
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
     pub unsafe fn load(&self, cs: super::SegmentSelector, ds: super::SegmentSelector) {

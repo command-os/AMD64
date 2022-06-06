@@ -6,7 +6,7 @@ use modular_bitfield::prelude::*;
 #[bitfield(bits = 64)]
 #[derive(BitfieldSpecifier, Debug, Default, Clone, Copy)]
 #[repr(u64)]
-pub struct Efer {
+pub struct ExtendedFeatureEnableReg {
     pub syscall_ext: bool,
     #[skip]
     __: B7,
@@ -27,6 +27,6 @@ pub struct Efer {
     __: B45,
 }
 
-impl super::Msr for Efer {
+impl super::ModelSpecificReg for ExtendedFeatureEnableReg {
     const MSR_NUM: u32 = 0xC000_0080;
 }

@@ -65,12 +65,12 @@ impl Entry {
 
 #[derive(Debug, Clone, Copy)]
 #[repr(C, packed)]
-pub struct Idtr {
+pub struct IDTReg {
     pub limit: u16,
     pub base: *const Entry,
 }
 
-impl Idtr {
+impl IDTReg {
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
     pub unsafe fn load(&self) {
@@ -78,4 +78,4 @@ impl Idtr {
     }
 }
 
-unsafe impl Sync for Idtr {}
+unsafe impl Sync for IDTReg {}

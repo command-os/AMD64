@@ -3,7 +3,7 @@
 
 use core::arch::asm;
 
-pub trait PortInOut: Sized {
+pub trait PortIO: Sized {
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
     unsafe fn read(port: u16) -> Self;
@@ -12,7 +12,7 @@ pub trait PortInOut: Sized {
     unsafe fn write(port: u16, value: Self);
 }
 
-impl PortInOut for u8 {
+impl PortIO for u8 {
     #[inline]
     unsafe fn read(port: u16) -> Self {
         let ret: Self;
@@ -26,7 +26,7 @@ impl PortInOut for u8 {
     }
 }
 
-impl PortInOut for u16 {
+impl PortIO for u16 {
     #[inline]
     unsafe fn read(port: u16) -> Self {
         let ret: Self;
@@ -40,7 +40,7 @@ impl PortInOut for u16 {
     }
 }
 
-impl PortInOut for u32 {
+impl PortIO for u32 {
     #[inline]
     unsafe fn read(port: u16) -> Self {
         let ret: Self;
@@ -54,13 +54,13 @@ impl PortInOut for u32 {
     }
 }
 
-pub struct Port<T: PortInOut, R: From<T> + Into<T>> {
+pub struct Port<T: PortIO, R: From<T> + Into<T>> {
     port: u16,
     __: core::marker::PhantomData<T>,
     ___: core::marker::PhantomData<R>,
 }
 
-impl<T: PortInOut, R: From<T> + Into<T>> Port<T, R> {
+impl<T: PortIO, R: From<T> + Into<T>> Port<T, R> {
     #[must_use]
     pub const fn new(port: u16) -> Self {
         Self {
@@ -80,8 +80,23 @@ impl<T: PortInOut, R: From<T> + Into<T>> Port<T, R> {
 
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
+    #[must_use]
+    #[inline]
+    pub unsafe fn read_off<A: Into<u16>>(&self, off: A) -> R {
+        T::read(self.port + off.into()).into()
+    }
+
+    /// # Safety
+    /// The caller must ensure that this operation has no unsafe side effects.
     #[inline]
     pub unsafe fn write(&self, value: R) {
         T::write(self.port, value.into());
+    }
+
+    /// # Safety
+    /// The caller must ensure that this operation has no unsafe side effects.
+    #[inline]
+    pub unsafe fn write_off<A: Into<u16>>(&self, value: R, off: A) {
+        T::write(self.port + off.into(), value.into());
     }
 }

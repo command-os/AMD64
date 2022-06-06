@@ -6,7 +6,7 @@ use modular_bitfield::prelude::*;
 #[bitfield(bits = 64)]
 #[derive(BitfieldSpecifier, Debug, Default, Clone, Copy)]
 #[repr(u64)]
-pub struct ApicBase {
+pub struct APICBase {
     #[skip]
     __: u8,
     #[skip(setters)]
@@ -18,6 +18,6 @@ pub struct ApicBase {
     pub apic_base: B52,
 }
 
-impl super::Msr for ApicBase {
+impl super::ModelSpecificReg for APICBase {
     const MSR_NUM: u32 = 0x1B;
 }
