@@ -2,6 +2,7 @@
 //! This project is licensed by the Creative Commons Attribution-NoCommercial-NoDerivatives licence.
 
 use modular_bitfield::prelude::*;
+use num_enum::IntoPrimitive;
 
 #[bitfield(bits = 8)]
 #[repr(u8)]
@@ -83,49 +84,70 @@ pub struct ModemControl {
 
 #[allow(dead_code)]
 pub struct SerialPort {
-    data_or_divisor_low: super::port::Port<u8, u8>,
-    enable_intr_or_divisor_high: super::port::Port<u8, u8>,
-    intr_id_or_fifo: super::port::Port<u8, u8>,
-    line_ctl: super::port::Port<u8, LineControl>,
-    modem_ctl: super::port::Port<u8, ModemControl>,
-    line_sts: super::port::Port<u8, LineStatus>,
+    port: super::port::Port<u8, u8>,
+}
+
+#[repr(u16)]
+#[derive(IntoPrimitive)]
+pub enum SerialPortReg {
+    DataOrDivisor = 0,
+    EnableIntrOrDivisorHigh,
+    IntrIDOrFifo,
+    LineControl,
+    ModemControl,
+    LineStatus,
 }
 
 impl SerialPort {
     pub const fn new(port_num: u16) -> Self {
         Self {
-            data_or_divisor_low: super::port::Port::new(port_num),
-            enable_intr_or_divisor_high: super::port::Port::new(port_num + 1),
-            intr_id_or_fifo: super::port::Port::new(port_num + 2),
-            line_ctl: super::port::Port::new(port_num + 3),
-            modem_ctl: super::port::Port::new(port_num + 4),
-            line_sts: super::port::Port::new(port_num + 5),
+            port: super::port::Port::new(port_num),
         }
     }
 
+    #[inline]
+    fn line_status(&self) -> LineStatus {
+        unsafe { self.port.read_off(SerialPortReg::LineStatus) }
+    }
+
+    #[inline]
+    pub fn set_intr_enable(&self, val: u8) {
+        unsafe {
+            self.port
+                .write_off(val, SerialPortReg::EnableIntrOrDivisorHigh)
+        }
+    }
+
+    #[inline]
     fn can_send_data(&self) -> bool {
-        unsafe { self.line_sts.read().transmitter_empty() }
+        self.line_status().transmitter_empty()
+    }
+
+    #[inline]
+    fn set_line_ctl(&self, val: LineControl) {
+        unsafe { self.port.write_off(val, SerialPortReg::LineControl) }
+    }
+
+    #[inline]
+    fn set_modem_ctl(&self, val: ModemControl) {
+        unsafe { self.port.write_off(val, SerialPortReg::ModemControl) }
     }
 
     pub fn init(&self) {
         unsafe {
-            // Disable interrupts
-            self.enable_intr_or_divisor_high.write(0);
-            // Enable DLAB
-            self.line_ctl.write(LineControl::new().with_dlab(true));
-            // Set divisor to 1
-            self.data_or_divisor_low.write(1);
-            self.enable_intr_or_divisor_high.write(0);
-            // 8 bits, no parity, one stop bit
-            self.line_ctl.write(
+            self.set_intr_enable(0);
+            self.set_line_ctl(LineControl::new().with_dlab(true));
+            self.port.write_off(1, SerialPortReg::DataOrDivisor);
+            self.set_intr_enable(0);
+            self.set_line_ctl(
                 LineControl::new()
                     .with_parity(Parity::None)
                     .with_data_bits(DataBits::EightBits),
             );
             // Disable FIFO
-            self.intr_id_or_fifo.write(0);
+            self.port.write_off(0, SerialPortReg::IntrIDOrFifo);
             // Enable data terminal
-            self.modem_ctl.write(
+            self.set_modem_ctl(
                 ModemControl::new()
                     .with_terminal_ready(true)
                     .with_aux_out_2(true),
@@ -136,16 +158,16 @@ impl SerialPort {
     pub fn transmit(&self, value: u8) {
         while !self.can_send_data() {}
 
-        unsafe { self.data_or_divisor_low.write(value) }
+        unsafe { self.port.write(value) }
     }
 
     fn can_receive_data(&self) -> bool {
-        unsafe { self.line_sts.read().data_ready() }
+        self.line_status().data_ready()
     }
 
     pub fn receive(&self) -> u8 {
         while !self.can_receive_data() {}
 
-        unsafe { self.data_or_divisor_low.read() }
+        unsafe { self.port.read() }
     }
 }

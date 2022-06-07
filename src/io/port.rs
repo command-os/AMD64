@@ -82,7 +82,7 @@ impl<T: PortIO, R: From<T> + Into<T>> Port<T, R> {
     /// The caller must ensure that this operation has no unsafe side effects.
     #[must_use]
     #[inline]
-    pub unsafe fn read_off<A: Into<u16>>(&self, off: A) -> R {
+    pub unsafe fn read_off<A: Into<u16>, R2: From<T> + Into<T>>(&self, off: A) -> R2 {
         T::read(self.port + off.into()).into()
     }
 
@@ -96,7 +96,7 @@ impl<T: PortIO, R: From<T> + Into<T>> Port<T, R> {
     /// # Safety
     /// The caller must ensure that this operation has no unsafe side effects.
     #[inline]
-    pub unsafe fn write_off<A: Into<u16>>(&self, value: R, off: A) {
+    pub unsafe fn write_off<A: Into<u16>, R2: From<T> + Into<T>>(&self, value: R2, off: A) {
         T::write(self.port + off.into(), value.into());
     }
 }
