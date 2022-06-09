@@ -4,8 +4,7 @@
 #![no_std]
 #![deny(warnings, clippy::cargo, unused_extern_crates, rust_2021_compatibility)]
 
-pub mod cpu;
-pub mod intrs;
+pub mod cpuid;
 pub mod io;
 pub mod paging;
 pub mod registers;
