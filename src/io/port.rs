@@ -54,6 +54,7 @@ impl PortIO for u32 {
     }
 }
 
+#[derive(Clone, Copy)]
 pub struct Port<T: PortIO, R: From<T> + Into<T>> {
     port: u16,
     __: core::marker::PhantomData<T>,

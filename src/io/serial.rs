@@ -133,6 +133,7 @@ impl SerialPort {
         unsafe { self.port.write_off(val, SerialPortReg::ModemControl) }
     }
 
+    #[inline]
     pub fn init(&self) {
         unsafe {
             self.set_intr_enable(0);
