@@ -1,11 +1,11 @@
 [package]
 name = "amd64"
-description = "Firework AMD64 implementation crate"
+description = "The BoxOS AMD64 implementation crate"
 repository = "https://github.com/Firework-OS/AMD64"
 keywords = ["amd64"]
 categories = ["no-std"]
 version = "0.1.0"
-authors = ["VisualDevelopment"]
+authors = ["ChefKiss Inc"]
 edition = "2021"
 license-file = "LICENSE"
 
